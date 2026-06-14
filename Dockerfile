@@ -27,6 +27,9 @@ WORKDIR /var/www/html
 # Copy application files
 COPY . .
 
+# Set execute permissions on the entrypoint script
+RUN chmod +x entrypoint.sh
+
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN composer install --no-dev --optimize-autoloader
@@ -37,5 +40,5 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 # Expose web server port
 EXPOSE 80
 
-# Start Apache in the foreground
-CMD ["apache2-foreground"]
+# Configure container entrypoint
+ENTRYPOINT ["/var/www/html/entrypoint.sh"]
